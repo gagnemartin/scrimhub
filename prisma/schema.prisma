@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator js {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+model User {
+  id  String @id @default(uuid())
+  discordId String?
+  displayName String
+  epicId String
+  isAdmin Boolean @default(false)
+  organisations MembersOnOrganisations[]
+  organisationsCreated Organisation[]
+  teams MembersOnTeams[]
+  teamsCreated Team[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Organisation {
+  id String @id @default(uuid())
+  members MembersOnOrganisations[]
+  name String
+  teams Team[]
+  user User? @relation(fields: [createdBy], references: [id], onDelete: SetNull)
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model MembersOnOrganisations {
+  role OrganisationRole @default(MANAGER)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  organisation Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  organisationId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@id([userId, organisationId])
+}
+
+model Team {
+  id  String @id @default(uuid())
+  game Game @relation(fields: [gameId], references: [id])
+  gameId String
+  members MembersOnTeams[]
+  name String
+  organisation Organisation? @relation(fields: [organisationId], references: [id], onDelete: SetNull)
+  organisationId String
+  scrims ScrimsOnTeams[]
+  user User? @relation(fields: [createdBy], references: [id], onDelete: SetNull)
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model MembersOnTeams {
+  role TeamRole @default(PLAYER)
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@id([userId, teamId])
+}
+
+model Game {
+  id  String @id @default(uuid())
+  name String
+  scrims Scrim[]
+  teams Team[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Scrim {
+  id  String @id @default(uuid())
+  booked Boolean @default(false)
+  date DateTime
+  duration Int @default(60)
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  gameId String
+  lobbyLogin String?
+  lobbyPassword String?
+  teams ScrimsOnTeams[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@unique([date, gameId, lobbyLogin])
+}
+
+model ScrimsOnTeams {
+  scrim Scrim @relation(fields: [scrimId], references: [id], onDelete: Cascade)
+  scrimId String
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId String
+  appliedAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@id([scrimId, teamId])
+}
+
+enum TeamRole {
+    COACH
+    MANAGER
+    PLAYER
+    SUBSTITUTE
+}
+
+enum OrganisationRole {
+    OWNER
+    MANAGER
+}
