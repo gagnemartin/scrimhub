@@ -9,7 +9,10 @@ CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "discordId" TEXT,
     "displayName" TEXT NOT NULL,
-    "epicId" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "epicId" TEXT,
+    "password" TEXT NOT NULL,
+    "refreshToken" TEXT NOT NULL,
     "isAdmin" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -21,7 +24,7 @@ CREATE TABLE "User" (
 CREATE TABLE "Organisation" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "createdBy" TEXT NOT NULL,
+    "createdBy" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -45,7 +48,7 @@ CREATE TABLE "Team" (
     "gameId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "organisationId" TEXT NOT NULL,
-    "createdBy" TEXT NOT NULL,
+    "createdBy" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -97,6 +100,9 @@ CREATE TABLE "ScrimsOnTeams" (
 
     CONSTRAINT "ScrimsOnTeams_pkey" PRIMARY KEY ("scrimId","teamId")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Scrim_date_gameId_lobbyLogin_key" ON "Scrim"("date", "gameId", "lobbyLogin");

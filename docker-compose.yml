@@ -8,13 +8,15 @@ services:
       context: ./docker
       dockerfile: Dockerfile.postgres.dev
     env_file:
-      - ./.env
+      - ./.env.local
     ports:
-      - 5432:5432
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
     volumes:
       - database-data:/var/lib/postgresql/data/
     networks:
       - app
+    profiles:
+      - development
 
   scrimhub-client:
     container_name: scrimhub-client
@@ -24,7 +26,7 @@ services:
       context: ./
       dockerfile: ./docker/Dockerfile.client.dev
     env_file:
-      - ./.env
+      - ./.env.local
     volumes:
       - .:/usr/src/app/
       - /usr/src/app/node_modules

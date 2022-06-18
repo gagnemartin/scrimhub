@@ -1,11 +1,23 @@
 import { ApolloServer } from 'apollo-server-micro'
 import Cors from 'micro-cors'
+import { constraintDirective, constraintDirectiveTypeDefs } from 'graphql-constraint-directive'
+import { makeExecutableSchema } from '@graphql-tools/schema'
 import { typeDefs } from '../../graphql/schema'
 import { resolvers } from '../../graphql/resolvers'
 import { createContext } from '../../graphql/context'
 
+let schema = makeExecutableSchema({
+  typeDefs: [constraintDirectiveTypeDefs, typeDefs],
+  resolvers
+})
+schema = constraintDirective()(schema)
+
 const cors = Cors()
-const apolloServer = new ApolloServer({ typeDefs, resolvers, csrfPrevention: true, context: createContext })
+const apolloServer = new ApolloServer({
+  schema,
+  csrfPrevention: true,
+  context: createContext
+})
 const startServer = apolloServer.start()
 
 export default cors(async function handler(req: any, res: any) {

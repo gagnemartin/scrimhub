@@ -16,7 +16,10 @@ model User {
   id  String @id @default(uuid())
   discordId String?
   displayName String
-  epicId String
+  email String @unique()
+  epicId String?
+  password String
+  refreshToken String @default(uuid())
   isAdmin Boolean @default(false)
   organisations MembersOnOrganisations[]
   organisationsCreated Organisation[]
@@ -32,7 +35,7 @@ model Organisation {
   name String
   teams Team[]
   user User? @relation(fields: [createdBy], references: [id], onDelete: SetNull)
-  createdBy String
+  createdBy String?
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
@@ -59,7 +62,7 @@ model Team {
   organisationId String
   scrims ScrimsOnTeams[]
   user User? @relation(fields: [createdBy], references: [id], onDelete: SetNull)
-  createdBy String
+  createdBy String?
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }

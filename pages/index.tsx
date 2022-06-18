@@ -1,6 +1,12 @@
-import type { NextPage } from 'next'
+import React, { useContext, useState } from 'react'
+import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
+import useSWR from 'swr'
 import { useQuery, gql } from '@apollo/client'
+import apiFetch from '@lib/apiFetch'
+import Link from 'next/link'
+import useAuth from 'hooks/useAuth'
+import { refresh } from './api/auth/refresh'
 
 const GET_USERS = gql`
   {
@@ -10,12 +16,39 @@ const GET_USERS = gql`
     }
   }
 `
+const Home: NextPage = (props) => {
+  console.log({ props })
+  const { user, setUser } = useAuth()
+  const { data, loading, error } = useQuery(GET_USERS, {
+    context: {
+      token: user.token
+    }
+  })
 
-const Home: NextPage = () => {
-  const { loading, error, data } = useQuery(GET_USERS)
-  if (loading) return <p>Loading...</p>
-  if (error) return <p>Error :</p>
-  console.log(data)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  console.log({ data, loading, error, token: user.token })
+
+  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value)
+  }
+
+  const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value)
+  }
+
+  const handleSubmit = async (e: any) => {
+    const formData = { email, password }
+    e.preventDefault()
+    const response = await apiFetch.post('/api/auth/login', {
+      credentials: 'same-origin',
+      body: JSON.stringify(formData)
+    })
+
+    setUser(response)
+    console.log({ user })
+  }
 
   return (
     <div>
@@ -25,9 +58,33 @@ const Home: NextPage = () => {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <main></main>
+      <main>
+        <form action='#' onSubmit={handleSubmit}>
+          <input type='email' value={email} onChange={handleChangeEmail} />
+          <input type='password' value={password} onChange={handleChangePassword} />
+          <button type='submit'>Login</button>
+        </form>
+        {user && <div>{user.email}</div>}
+      </main>
     </div>
   )
 }
+
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   console.log({ ssr: context.req.cookies })
+//   const response = await apiFetch.post('http://localhost:3000/api/auth/refresh', {
+//     credentials: 'same-origin'
+//   })
+
+//   console.log({ server: response })
+
+//   return {
+//     props: {
+//       user: response
+//     }
+//   }
+
+//   // setUser(response)
+// }
 
 export default Home

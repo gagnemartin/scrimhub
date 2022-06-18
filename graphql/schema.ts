@@ -5,7 +5,10 @@ export const typeDefs = gql`
     id: String!
     discordId: String
     displayName: String!
+    email: String!
     epicId: String
+    password: String!
+    refreshToken: String!
     isAdmin: Boolean
     organisations: [MembersOnOrganisations]!
     organisationsCreated: [Organisation]!
@@ -93,31 +96,17 @@ export const typeDefs = gql`
     user(id: String): User
     users: [User]!
   }
+
+  input CreateUserInput {
+    displayName: String! @constraint(minLength: 2, maxLength: 30)
+    email: String! @constraint(format: "email")
+    password: String! @constraint(minLength: 8)
+    passwordConfirm: String!
+  }
+
+  type Mutation {
+    createUser(user: CreateUserInput): User
+    login(email: String!, password: String!): User
+  }
 `
 
-// model Scrim {
-//   id  String @id @default(uuid())
-//   booked Boolean @default(false)
-//   date DateTime
-//   duration Int @default(60)
-//   game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
-//   gameId String
-//   lobbyLogin String?
-//   lobbyPassword String?
-//   teams ScrimsOnTeams[]
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @default(now())
-
-//   @@unique([date, gameId, lobbyLogin])
-// }
-
-// model ScrimsOnTeams {
-//   scrim Scrim @relation(fields: [scrimId], references: [id], onDelete: Cascade)
-//   scrimId String
-//   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
-//   teamId String
-//   appliedAt DateTime @default(now())
-//   updatedAt DateTime @default(now())
-
-//   @@id([scrimId, teamId])
-// }
