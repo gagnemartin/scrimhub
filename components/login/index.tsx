@@ -1,26 +1,18 @@
 import useAuth from '@hooks/useAuth'
+import useFormInput from '@hooks/useFormInput'
 import apiFetch from '@lib/apiFetch'
 import { NextComponentType } from 'next'
-import React, { useState } from 'react'
 
 const Login: NextComponentType = () => {
   const { user, setUser, isLoading } = useAuth()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const email = useFormInput()
+  const password = useFormInput()
 
   if (isLoading) return null
 
-  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value)
-  }
-
-  const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value)
-  }
-
   const handleSubmit = async (e: any) => {
     e.preventDefault()
-    const formData = { email, password }
+    const formData = { email: email.value, password: password.value }
     const response = await apiFetch.post('/api/auth/login', {
       credentials: 'same-origin',
       body: JSON.stringify(formData)
@@ -31,7 +23,7 @@ const Login: NextComponentType = () => {
 
   const handleClick = async (e: any) => {
     e.preventDefault()
-    const response = await apiFetch.post('/api/auth/logout', {
+    await apiFetch.post('/api/auth/logout', {
       credentials: 'same-origin'
     })
 
@@ -51,9 +43,9 @@ const Login: NextComponentType = () => {
 
   return (
     <div>
-      <form action='#' onSubmit={handleSubmit}>
-        <input type='email' value={email} onChange={handleChangeEmail} />
-        <input type='password' value={password} onChange={handleChangePassword} />
+      <form action='/api/auth/login' onSubmit={handleSubmit}>
+        <input placeholder='Email' name='email' type='email' {...email} />
+        <input placeholder='Password' name='password' type='password' {...password} />
         <button type='submit'>Login</button>
       </form>
     </div>

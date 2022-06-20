@@ -37,8 +37,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    return res.status(401).json({ message: 'User not found' })
+    return res.status(400).json({ message: 'User not found' })
   }
 
-  return res.status(405).json({ message: 'Bad request' })
+  return res.status(405).json({ message: 'Method not allowed' })
 }

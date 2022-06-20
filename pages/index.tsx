@@ -1,7 +1,6 @@
 import React from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import useAuth from 'hooks/useAuth'
 import ScrimsBar from 'components/scrimsBar'
 import Login from 'components/login'
 
