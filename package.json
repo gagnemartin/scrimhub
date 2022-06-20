@@ -12,6 +12,7 @@
     "studio": "npx prisma studio",
     "init": "npm run generate",
     "docker:migrate": "docker-compose --env-file ./.env.local exec scrimhub-client npm run migrate",
+    "docker:generate": "docker-compose --env-file ./.env.local exec scrimhub-client npm run generate",
     "docker:init": "docker-compose exec scrimhub-client npm run init",
     "docker:dev": "docker-compose --env-file ./.env.local --profile development up",
     "docker:stop": "docker-compose --env-file ./.env.local stop",

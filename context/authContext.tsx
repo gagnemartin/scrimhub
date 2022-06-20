@@ -12,21 +12,13 @@ const refresh = async (dispatch: Dispatch<Action>) => {
   requestUserAction(dispatch)
 
   try {
-    // const payload = await UsersService.refresh()
     const options = {
       credentials: 'same-origin'
     }
     const payload = await apiFetch.post('/api/auth/refresh', options)
-    console.log({ payload })
 
-    if (payload.token) {
-      setUserAction(dispatch, payload)
-    }
-
-    // if (isSuccessResponse(payload)) {
-    //   dispatch({ type: actionTypes.success, payload })
-    // } else {
-    //   dispatch({ type: actionTypes.error, error: payload })
+    // if (payload.token) {
+    setUserAction(dispatch, payload)
     // }
 
     // return setInterval(async () => {
@@ -50,7 +42,8 @@ function AuthProvider({ children }: { children: any }) {
   const contextValue = useMemo(() => ({ state, dispatch }), [state, dispatch])
 
   useEffect(() => {
-    // const interval = refresh(dispatch)
+    console.log('REFRESH MOUNTED')
+    const interval = refresh(dispatch)
     // return () => clearInterval(interval)
   }, [])
 

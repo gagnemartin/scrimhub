@@ -7,7 +7,6 @@ import { generateToken, getTokenExpiresAt } from '@utils/jwt'
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { refreshToken } = req.cookies
-    console.log(req.cookies)
 
     if (refreshToken) {
       const user = await prismaClient.user.findFirst({
@@ -17,7 +16,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       if (user) {
         const newRefreshToken = uuidv4()
-
         const token = await generateToken(user)
         const expiresAt = getTokenExpiresAt()
 

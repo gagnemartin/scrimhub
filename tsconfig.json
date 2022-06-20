@@ -16,12 +16,13 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@lib/*": ["lib/*"],
-      "@utils/*": ["utils/*"],
-      "@middlewares/*": ["middlewares/*"],
-      "@hooks/*": ["hooks/*"],
       "@actions/*": ["actions/*"],
-      "@reducers/*": ["reducers/*"]
+      "@components/*": ["components/*"],
+      "@hooks/*": ["hooks/*"],
+      "@lib/*": ["lib/*"],
+      "@middlewares/*": ["middlewares/*"],
+      "@reducers/*": ["reducers/*"],
+      "@utils/*": ["utils/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

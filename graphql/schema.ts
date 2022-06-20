@@ -93,20 +93,21 @@ export const typeDefs = gql`
   }
 
   type Query {
-    user(id: String): User
-    users: [User]!
+    # user(id: String): User
+    # users: [User]!
+    scrims: [Scrim]!
   }
 
-  input CreateUserInput {
-    displayName: String! @constraint(minLength: 2, maxLength: 30)
-    email: String! @constraint(format: "email")
-    password: String! @constraint(minLength: 8)
-    passwordConfirm: String!
-  }
+  # input CreateUserInput {
+  #   displayName: String! @constraint(minLength: 2, maxLength: 30)
+  #   email: String! @constraint(format: "email")
+  #   password: String! @constraint(minLength: 8)
+  #   passwordConfirm: String!
+  # }
 
-  type Mutation {
-    createUser(user: CreateUserInput): User
-    login(email: String!, password: String!): User
-  }
+  # type Mutation {
+  #   createUser(user: CreateUserInput): User
+  #   login(email: String!, password: String!): User
+  # }
 `
 
