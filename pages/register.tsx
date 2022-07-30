@@ -21,7 +21,7 @@ const Register: NextPage = () => {
 
 const withAuth = (getServerSideProps: GetServerSideProps) => {
   return async (context: GetServerSidePropsContext) => {
-    const { res, req } = context
+    const { req } = context
     const refreshToken = req?.cookies?.refreshToken
 
     if (refreshToken) {

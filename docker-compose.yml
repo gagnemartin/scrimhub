@@ -3,7 +3,6 @@ version: '3.8'
 services:
   scrimhub-database:
     container_name: scrimhub-database
-    restart: always
     build:
       context: ./docker
       dockerfile: Dockerfile.postgres.dev
@@ -20,7 +19,6 @@ services:
 
   scrimhub-client:
     container_name: scrimhub-client
-    restart: always
     stdin_open: true
     build:
       context: ./

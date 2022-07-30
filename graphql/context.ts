@@ -14,24 +14,11 @@ export async function createContext({ req }: { req: NextApiRequest }): Promise<C
   if (authHeader) {
     const token = authHeader.split(' ')[1]
 
-    // jwt.verify(token, process.env.JWT_TOKEN, (err, user) => {
-    //   if (err) {
-    //     return next(new AppError(403))
-    //   }
-
-    //   req.user = user
-    //   next()
-    // })
-
     return {
       token,
       prisma
     }
   }
-
-  // if (!session) return { prisma }
-
-  // const { user, accessToken } = session
 
   return {
     prisma

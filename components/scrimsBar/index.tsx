@@ -23,6 +23,7 @@ const ScrimsBar: NextComponentType = () => {
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error: {error.message}</p>
+  if (data.scrims.length === 0) return <p>No scrims to show</p>
 
   return (
     <div>

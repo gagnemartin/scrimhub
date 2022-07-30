@@ -1,16 +1,23 @@
 import type { AppProps } from 'next/app'
 import { ApolloProvider } from '@apollo/client'
-import apolloClient from '@lib/apolloClient'
+import useApolloClient from '@lib/apolloClient'
 import AuthProvider from 'context/authContext'
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const client = useApolloClient()
+  return (
+    <ApolloProvider client={client}>
+      <Component {...pageProps} />
+    </ApolloProvider>
+  )
+}
+
+const Container = (props: AppProps) => {
   return (
     <AuthProvider>
-      <ApolloProvider client={apolloClient}>
-        <Component {...pageProps} />
-      </ApolloProvider>
+      <MyApp {...props} />
     </AuthProvider>
   )
 }
 
-export default MyApp
+export default Container

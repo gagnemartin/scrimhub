@@ -8,7 +8,7 @@ const useFormInput = (defaultValue: any = '', options: FormInputOptions = {}) =>
   const { type } = options
   const [value, setValue] = useState(defaultValue)
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     if (type === 'checkbox') {
       setValue((prevValue: boolean) => !prevValue)
     } else {
@@ -18,7 +18,8 @@ const useFormInput = (defaultValue: any = '', options: FormInputOptions = {}) =>
 
   return {
     value,
-    onChange
+    onChange,
+    setValue
   }
 }
 

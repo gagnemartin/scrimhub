@@ -1,11 +1,13 @@
-export default function withMethodsGuard(methods: string[]) {
-  return function withMethodsGuardHandler(req: any, res: any, next: any) {
+import APIError from '@lib/APIError'
+import { NextApiHandler } from 'next'
+
+export default function withMethodsGuard(methods: string[], handler: NextApiHandler) {
+  return async function withMethodsGuardHandler(req: any, res: any) {
     if (methods.includes(req.method)) {
-      next()
+      return await handler(req, res)
     } else {
-      res.status(405).json({
-        error: 'Method not allowed'
-      })
+      const statusCode = 405
+      res.status(statusCode).json(new APIError(statusCode))
     }
   }
 }

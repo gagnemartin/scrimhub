@@ -96,18 +96,46 @@ export const typeDefs = gql`
     # user(id: String): User
     # users: [User]!
     scrims: [Scrim]!
+    games: [Game]!
+    myTeams(id: String): User!
   }
 
-  # input CreateUserInput {
-  #   displayName: String! @constraint(minLength: 2, maxLength: 30)
-  #   email: String! @constraint(format: "email")
-  #   password: String! @constraint(minLength: 8)
-  #   passwordConfirm: String!
+  input CreateUserInput {
+    displayName: String!
+    email: String!
+    password: String!
+    passwordConfirm: String!
+  }
+
+  input CreateScrimInput {
+    date: String!
+    duration: Int!
+    gameId: String!
+    teamId: String!
+  }
+
+  # type UserCreateResultSuccess {
+  #   user: User!
   # }
 
-  # type Mutation {
-  #   createUser(user: CreateUserInput): User
-  #   login(email: String!, password: String!): User
+  # type Error {
+  #   message: String
   # }
+
+  # type UserCreateInvalidInputError {
+  #   message: String!
+  #   emailErrorMessage: String
+  #   passwordErrorMessage: String
+  #   passwordConfirmErrorMessage: String
+  #   displayNameErrorMessage: String
+  # }
+
+  # union UserCreateResult = UserCreateResultSuccess | Error
+
+  type Mutation {
+    createUser(user: CreateUserInput): User
+    createScrim(scrim: CreateScrimInput): Scrim
+    # login(email: String!, password: String!): User
+  }
 `
 

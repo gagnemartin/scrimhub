@@ -1,35 +1,37 @@
-import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
+import { ApolloClient, InMemoryCache, createHttpLink, GraphQLRequest, Context } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import useAuth from '@hooks/useAuth'
 
-const httpLink = createHttpLink({
-  uri: 'http://localhost:3000/api/graphql',
-  credentials: 'same-origin'
-})
+const createApolloClient = (token?: String) => {
+  const httpLink = createHttpLink({
+    uri: 'http://localhost:3000/api/graphql',
+    credentials: 'same-origin'
+  })
 
-const authLink = setContext((_, context) => {
-  const { headers, token } = context
+  const authLink = setContext((_: GraphQLRequest, context: Context) => {
+    const { headers } = context
 
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : ''
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token}` : ''
+      }
     }
-  }
-})
+  })
 
-const config = {
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  const config = {
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache()
+  }
+
+  return new ApolloClient(config)
 }
 
-let apolloClient: ApolloClient<any>
-if (process.env.NODE_ENV === 'production') {
-  apolloClient = new ApolloClient(config)
-} else {
-  if (!global.apolloClient) {
-    global.apolloClient = new ApolloClient(config)
-  }
-  apolloClient = global.apolloClient
+const useApolloClient = () => {
+  const auth = useAuth()
+
+  return createApolloClient(auth?.user?.token)
 }
 
-export default apolloClient
+export default useApolloClient
+export { createApolloClient }

@@ -3,8 +3,17 @@ import jwt from 'jsonwebtoken'
 interface State {
   status: string
   isLoading: boolean
+  isAuthenticated: boolean
   error?: any
-  user?: any
+  user?: User
+}
+
+export interface User {
+  id?: string
+  email?: string
+  displayName?: string
+  refreshToken?: string
+  token?: string
 }
 
 export type Action = {
@@ -34,6 +43,7 @@ export const initialState: State = {
   status: actionTypes.request,
   user: {},
   isLoading: true,
+  isAuthenticated: false,
   error: {}
 }
 
@@ -49,16 +59,19 @@ const authReducer = (state: State, action: Action): typeof initialState => {
     }
     case actionTypes.success: {
       let user = {}
+      let isAuthenticated = false
 
       if (action.payload.data?.token) {
         const {
           data: { token, expiresAt }
         } = action.payload
+        isAuthenticated = true
 
         user = {
-          ...jwt.decode(token),
+          ...(jwt.decode(token) as User),
           token,
-          expiresAt
+          expiresAt,
+          isAuthenticated
         }
       }
 
@@ -66,6 +79,7 @@ const authReducer = (state: State, action: Action): typeof initialState => {
         ...initialState,
         status: actionTypes.success,
         isLoading: false,
+        isAuthenticated,
         user
       }
     }

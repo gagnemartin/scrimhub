@@ -47,7 +47,7 @@ CREATE TABLE "Team" (
     "id" TEXT NOT NULL,
     "gameId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "organisationId" TEXT NOT NULL,
+    "organisationId" TEXT,
     "createdBy" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

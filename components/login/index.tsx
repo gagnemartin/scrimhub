@@ -2,6 +2,7 @@ import useAuth from '@hooks/useAuth'
 import useFormInput from '@hooks/useFormInput'
 import apiFetch from '@lib/apiFetch'
 import { NextComponentType } from 'next'
+import Link from 'next/link'
 
 const Login: NextComponentType = () => {
   const { user, setUser, isLoading } = useAuth()
@@ -48,6 +49,9 @@ const Login: NextComponentType = () => {
         <input placeholder='Password' name='password' type='password' {...password} />
         <button type='submit'>Login</button>
       </form>
+      <Link href='/register'>
+        <a href='/register'>Register</a>
+      </Link>
     </div>
   )
 }
